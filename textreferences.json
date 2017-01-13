@@ -1,0 +1,24 @@
+[
+    {
+        "text1": {
+            "id": 1,
+            "category": "category1",
+            "title": "title1",
+            "url": "url1",
+            "description": "description1",
+            "bookmarkNote": "bookmarkNote1",
+            "read": false
+        }
+    },
+    {
+        "text2": {
+            "id": 2,
+            "category": "category2",
+            "title": "title2",
+            "url": "url2",
+            "description": "description2",
+            "bookmarkNote": "bookmarkNote2",
+            "read": false
+        }
+    }
+]
