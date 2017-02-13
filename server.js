@@ -30,6 +30,7 @@ router.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
     res.header('Access-Control-Allow-Headers', 'Content-Type');
+	res.header('Access-Control-Allow-Methods', 'GET, POST, PUT ,DELETE');
     next(); // make sure we go to the next routes and don't stop here
 });
 
@@ -73,6 +74,7 @@ var user_update = {
 
 router.route('/references')
     .get(function (req, res) { // get all the text references
+        console.log('Call get all the text references');
         fs.readFile(__dirname + "/" + "textreferences.json", 'utf8', function (err, data) {
             if (err)
                 res.send(err);
@@ -81,6 +83,7 @@ router.route('/references')
         });
     })
     .post(function (req, res) { // post a new text reference
+        console.log('Call post a new textReference');
         fs.readFile(__dirname + "/" + "textreferences.json", 'utf8', function (err, data) {
             if (err)
                 res.send(err);
@@ -89,9 +92,14 @@ router.route('/references')
 
             var arraytexts = new Array();
             arraytexts = texts; // initalize test array with the data string
-            arraytexts.push(user); // add user object
+
+            var newTextReference={}; // get the new textReference from the request object
+            newTextReference[req.body.key]=req.body.value;
+
+            arraytexts.push(newTextReference); // add the new textReference
 
             json = JSON.stringify(arraytexts, null, 4); //convert it back to json with indentation
+
             fs.writeFile(__dirname + "/" + "textreferences.json", json, 'utf8', function (err, data) {
                 if (err)
                     res.send(data);
@@ -106,18 +114,19 @@ router.route('/references')
 
 router.route('/references/:reference_id')
     .get(function (req, res) {  // get a text reference from an id
+        console.log('Call get a textreference');
         fs.readFile(__dirname + "/" + "textreferences.json", 'utf8', function (err, data) {
             if (err)
                 res.send(err);
             var users = new Array();
             users = JSON.parse(data);
             user = users.find(x => Object.keys(x)[0] === req.params.reference_id);
-            // var user = users["user"+req.params.reference_id];
             console.log(user);
             res.send(user);
         });
     })
     .put(function (req, res) { // update a text reference from an id
+        console.log('Call put a textReference');
         fs.readFile(__dirname + "/" + "textreferences.json", 'utf8', function (err, data) {
             if (err)
                 res.send(err);
@@ -126,11 +135,13 @@ router.route('/references/:reference_id')
             var arraytexts = new Array();
             arraytexts = texts; // initalize test array with the data string
 
+            var updateTextReference={}; // get the updated textReference from the request object
+            updateTextReference[req.body.key]=req.body.value;
+						
             // find index of the text to be updated
             var index = arraytexts.findIndex(x => Object.keys(x)[0] === req.params.reference_id);
-
-            // update the text with the new value
-            arraytexts[index] = user_update;
+			
+			arraytexts[index]=updateTextReference; // update the textReference
 
             json = JSON.stringify(arraytexts, null, 4); //convert it back to json with indentation 4
             fs.writeFile(__dirname + "/" + "textreferences.json", json, 'utf8', function (err, data) {
@@ -142,6 +153,7 @@ router.route('/references/:reference_id')
         });
     })
     .delete(function (req, res) {
+        console.log('Call delete a textReference');
         fs.readFile(__dirname + "/" + "textreferences.json", 'utf8', function (err, data) {
             if (err)
                 res.send(err);
